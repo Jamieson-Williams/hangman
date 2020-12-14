@@ -226,7 +226,7 @@ def show_possible_matches(my_word):
     else:
         print('No possible matches')
 
-show_possible_matches('a_ pl_ ')
+#show_possible_matches('a_ pl_ ')
 
 def hangman_with_hints(secret_word):
     '''
@@ -254,8 +254,58 @@ def hangman_with_hints(secret_word):
     
     Follows the other limitations detailed in the problem write-up.
     '''
-    # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
+    print('Welcome to the game hangman!')
+    print('I am thinking of a word that is',len(secret_word),'letters long')
+    print('-------------')
+    
+    user_guesses = 6
+    letters_guessed = []
+    warnings = 3
+    correct_guesses = 0
+    score = 0
+    
+    while True:
+        print('You have',user_guesses,'guesses left.')
+        print('Available letters:',get_available_letters(letters_guessed))
+        
+        inp = input('Please enter a letter: ').lower()
+        
+        if inp == '*':
+            print('Possible word matches are: ')
+            show_possible_matches(get_guessed_word(secret_word,letters_guessed))
+            continue
+        
+        if inp not in get_available_letters(letters_guessed):
+            if warnings >= 1:
+                warnings -= 1
+            else:
+                user_guesses -= 1
+            print('Oops! That letter has already been guessed or is not valid. You have', warnings, 'warnings left:',get_guessed_word(secret_word,letters_guessed))
+            print('-------------')
+            continue
+
+        letters_guessed.append(inp)
+
+        if is_word_guessed(secret_word,letters_guessed) == True:
+            score = user_guesses * correct_guesses
+            print('Congratulations, you won!')
+            print('Your total score for this game is:',score)
+            quit()
+
+        if inp in secret_word:
+            print('Good guess:',get_guessed_word(secret_word,letters_guessed))
+            correct_guesses += 1
+        else:
+            print('Oops! That letter is not in my word:',get_guessed_word(secret_word,letters_guessed))
+            if inp in 'aeiou':
+                user_guesses -= 2
+            else:
+                user_guesses -= 1
+        print('-------------')
+
+        if user_guesses == 0:
+            print('Sorry, you ran out of guesses. The secret word was',secret_word)
+            quit()
 
 
 
@@ -266,7 +316,7 @@ def hangman_with_hints(secret_word):
 
 
 if __name__ == "__main__":
-    pass
+    #pass
 
     # To test part 2, comment out the pass line above and
     # uncomment the following two lines.
@@ -279,5 +329,5 @@ if __name__ == "__main__":
     # To test part 3 re-comment out the above lines and 
     # uncomment the following two lines. 
     
-    #secret_word = choose_word(wordlist)
-    #hangman_with_hints(secret_word)
+    secret_word = choose_word(wordlist)
+    hangman_with_hints(secret_word)
